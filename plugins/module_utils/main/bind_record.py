@@ -8,6 +8,12 @@ from ansible_collections.ansibleguy.opnsense.plugins.module_utils.helper.main im
     get_multiple_matching, is_unset, is_ip4, is_ip6
 from ansible_collections.ansibleguy.opnsense.plugins.module_utils.base.cls import BaseModule
 
+def convert_to_fqdn(hostname: str, domain: str) -> str:
+    if not hostname.endswith('.'):
+        hostname = f"{hostname}.{domain}"
+    if not hostname.endswith('.'):
+        hostname = f"{hostname}."
+    return hostname
 
 class Record(BaseModule):
     CMDS = {
@@ -62,6 +68,23 @@ class Record(BaseModule):
                     self.m.fail_json(f"Value '{self.p['value']}' is not a valid IPv4-address!")
                 elif self.p['type'] == 'AAAA' and not is_ip6(self.p['value']):
                     self.m.fail_json(f"Value '{self.p['value']}' is not a valid IPv6-address!")
+                elif self.p['type'] == 'NS':
+                    hostname = convert_to_fqdn(self.p['value'], self.p['domain'])
+                    if not valid_hostname(hostname.rstrip('.')):
+                        self.m.fail_json(f"Value '{self.p['value']}' is not a valid hostname!")
+                elif self.p['type'] == 'MX':
+                    err = 'It should be in the format "10 mail.example.com."'
+                    try:
+                        priority, hostname = self.p['value'].split()
+                        err = 'The priority should be a number'
+                        priority = int(priority)
+                        hostname = convert_to_fqdn(hostname, self.p['domain'])
+                        if not valid_hostname(hostname.rstrip('.')):
+                            err = f'The hostname (resolved as {hostname}) should be a valid hostname'
+                            raise ValueError
+                    except ValueError:
+                        self.m.fail_json(f"Value '{self.p['value']}' is not a valid MX record! {err}.")
+
 
         # custom matching as dns round-robin allows for multiple records to match..
         if self.existing_entries is None:
