@@ -54,37 +54,38 @@ class Record(BaseModule):
         self.exists = False
         self.exists_rr = False
 
+    def check_value(self) -> None:
+        if is_unset(self.p['value']):
+            self._error(
+                'You need to supply a value to create the record '
+                f"'{self.p['name']}.{self.p['domain']}'"
+            )
+
+        if self.p['type'] == 'A' and not is_ip4(self.p['value']):
+            self.m.fail_json(f"Value '{self.p['value']}' is not a valid IPv4-address!")
+        elif self.p['type'] == 'AAAA' and not is_ip6(self.p['value']):
+            self.m.fail_json(f"Value '{self.p['value']}' is not a valid IPv6-address!")
+        elif self.p['type'] == 'NS':
+            fqdn = convert_to_fqdn(self.p['value'], self.p['domain'])
+            if not valid_hostname(fqdn.rstrip('.')):
+                self.m.fail_json(f"Value '{self.p['value']}' is not a valid hostname!")
+        elif self.p['type'] == 'MX':
+            err = 'It should be in the format "10 mail.example.com."'
+            try:
+                priority, hostname = self.p['value'].split()
+                err = 'The priority should be a number'
+                priority = int(priority)
+                fqdn = convert_to_fqdn(hostname, self.p['domain'])
+                err = f'The hostname (resolved as {fqdn}) should be a valid hostname'
+                if not valid_hostname(fqdn.rstrip('.')):
+                    raise ValueError
+            except ValueError:
+                self.m.fail_json(f"Value '{self.p['value']}' is not a valid MX record! {err}.")
+
     # pylint: disable=R0915
     def check(self) -> None:
         if self.p['state'] == 'present':
-            if is_unset(self.p['value']):
-                self._error(
-                    'You need to supply a value to create the record '
-                    f"'{self.p['name']}.{self.p['domain']}'"
-                )
-
-            else:
-                if self.p['type'] == 'A' and not is_ip4(self.p['value']):
-                    self.m.fail_json(f"Value '{self.p['value']}' is not a valid IPv4-address!")
-                elif self.p['type'] == 'AAAA' and not is_ip6(self.p['value']):
-                    self.m.fail_json(f"Value '{self.p['value']}' is not a valid IPv6-address!")
-                elif self.p['type'] == 'NS':
-                    hostname = convert_to_fqdn(self.p['value'], self.p['domain'])
-                    if not valid_hostname(hostname.rstrip('.')):
-                        self.m.fail_json(f"Value '{self.p['value']}' is not a valid hostname!")
-                elif self.p['type'] == 'MX':
-                    err = 'It should be in the format "10 mail.example.com."'
-                    try:
-                        priority, hostname = self.p['value'].split()
-                        err = 'The priority should be a number'
-                        priority = int(priority)
-                        hostname = convert_to_fqdn(hostname, self.p['domain'])
-                        if not valid_hostname(hostname.rstrip('.')):
-                            err = f'The hostname (resolved as {hostname}) should be a valid hostname'
-                            raise ValueError
-                    except ValueError:
-                        self.m.fail_json(f"Value '{self.p['value']}' is not a valid MX record! {err}.")
-
+            self.check_value()
 
         # custom matching as dns round-robin allows for multiple records to match..
         if self.existing_entries is None:
