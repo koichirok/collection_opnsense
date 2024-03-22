@@ -1,0 +1,147 @@
+{% for module in IMPORTS -%}
+{%   if IMPORTS[module] | length == 0 -%}
+import {{ module }}
+{%   else -%}
+from {{ module }} import {{ IMPORTS[module] | join(', ') }}
+{%   endif -%}
+{% endfor -%}
+from ansible.module_utils.basic import AnsibleModule
+
+from ansible_collections.ansibleguy.opnsense.plugins.module_utils.base.handler import \
+    ModuleSoftError
+from ansible_collections.ansibleguy.opnsense.plugins.module_utils.base.api import \
+    Session
+from ansible_collections.ansibleguy.opnsense.plugins.module_utils.helper.main import \
+    {% if FIELDS.VALIDATION.INT | length > 0 %}validate_int_fields, {% endif -%}
+    {% if FIELDS.VALIDATION.STR | length > 0 %}validate_str_fields, {% endif -%}
+    is_unset
+from ansible_collections.ansibleguy.opnsense.plugins.module_utils.base.cls import BaseModule
+
+{%- set LINE_LENGTH = 93 %}
+{#{%- set FIELDS_ID = module.get_id_fields().keys() %}#}
+{%- set FIELDS_ID_NUM = FIELDS_ID | length %}
+
+class {{ class_name }}(BaseModule):
+{%- if FIELDS.ID %}
+    FIELD_ID = '{{ FIELDS.ID }}'
+{%- endif %}
+    CMDS = {
+{%- for cmd in ['add', 'del', 'set', 'search', 'toggle', 'detail'] -%}
+{%- if cmd in CMDS %}
+        '{{ cmd }}': '{{ CMDS[cmd] }}',
+{%- endif -%}
+{%- endfor %}
+    }
+    API_KEY_PATH = '{{ API.KEY_PATH }}'
+    API_MOD = '{{ API.MOD }}'
+    API_CONT = '{{ API.CONT }}'
+{%-  if API.CMD_REL is defined %}
+{%-     if API.CONT_REL is defined %}
+    API_CONT_REL = '{{ API.CONT_REL }}'
+{%-     endif %}
+    API_CMD_REL = '{{ API.CMD_REL }}'
+{%- else %}
+    API_CONT_REL = 'controller_reload'  # if other # FIXME:
+    API_CMD_REL = 'reconfigure'                    # FIXME:
+{%- endif %}
+
+{%- set changes = FIELDS.CHANGE | map("single_quote") | join(', ') %}
+{%- set fields_change_begin = "    FIELDS_CHANGE = [" %}
+{%- set indent = 8 if changes | length > LINE_LENGTH - fields_change_begin | length - 1 else 0 %}
+{{ fields_change_begin }}{% if indent > 0 %}{{ "\n" }}{% endif -%}
+{{ changes | wordwrap(width=LINE_LENGTH - indent) | indent(width=indent, first=True)}}
+{%- if indent > 0 -%}{{ "\n" + ' ' * 4 }}{% endif %}]
+    FIELDS_ALL = [{% if FIELDS.TOGGLE %}'{{ FIELDS.TOGGLE }}', {% endif %}FIELD_ID]
+    FIELDS_ALL.extend(FIELDS_CHANGE)
+{%- if FIELDS.TRANSLATION %}
+    FIELDS_TRANSLATE = {
+{%- for argname, apifield in FIELDS.TRANSLATION.items() %}
+        '{{ argname }}': '{{ apifield }}',
+{%- endfor %}
+    }
+{%- endif %}
+{%- if FIELDS_BOOL_INVERT is defined %}
+    FIELDS_BOOL_INVERT = [] # TODO: add fields which need to be inverted#}
+{%- endif %}
+    FIELDS_TYPING = {
+{%- for type, fields in FIELDS.TYPING.items() -%}
+{%-   set fields = FIELDS.TYPING[type] | map("single_quote") | join(', ') -%}
+{%-   set indent = 12 if fields | length > LINE_LENGTH - 15 - type | length else 0 %}
+        '{{ type }}': [{%- if indent > 0 -%}{{ "\n" }}{% endif -%}
+{{ fields | wordwrap(width=LINE_LENGTH - indent) | indent(width=indent, first=True) }}
+{%- if indent > 0 -%}{{ "\n" + " " * 8 }}{% endif -%}
+],
+{%- endfor %}
+    }
+{%- if FIELDS.VALIDATION.INT %}
+    INT_VALIDATIONS = {
+{%- for field, validation in FIELDS.VALIDATION.INT.items() %}
+        '{{ field }}': {{ validation }},
+{%- endfor %}
+    }
+{%- endif %}
+{%- if FIELDS.VALIDATION.STR | length > 0 %}
+    STR_VALIDATIONS = {
+{%- for field, validation in FIELDS.VALIDATION.STR.items() %}
+        '{{ field }}': {{ validation }},
+{%- endfor %}
+    }
+{%- endif %}
+    EXIST_ATTR = '{{ EXIST_ATTR }}'
+{#%- if FIELDS.RELATION %}
+    SEARCH_ADDITIONAL = {
+{%- for name, field in RELATIONS.items() %}
+{%- set reference = [field.model.template.source.split('.') | last | lower, field.model.template['items']] | join('.') %}
+        'existing_{{ name | pluralize }}': '{{ reference }}',
+{%- endfor %} }#}
+    def __init__(self, module: AnsibleModule, result: dict, session: Session = None):
+        BaseModule.__init__(self=self, m=module, r=result, s=session)
+        self.{{ EXIST_ATTR }} = {}
+{#{%- for rel in RELATIONS %}
+        self.existing_{{ rel | pluralize }} = []
+{%- endfor %}#}
+
+    def check(self) -> None:
+        if self.p['state'] == 'present':
+{%- if FIELDS.VALIDATION.INT %}
+            validate_int_fields(module=self.m, data=self.p, field_minmax=self.INT_VALIDATIONS)
+{%- endif %}
+{%- if FIELDS.VALIDATION.STR %}
+            validate_str_fields(module=self.m, data=self.p, field_regex=self.STR_VALIDATIONS)
+{%- endif %}
+{%- if FIELDS.VALIDATION.values() | flatten | length == 0 %}
+            pass
+{%- endif %}}
+
+        # self._base_check()
+        self.b.find(match_fields=[])  # todo: match_fields
+
+        if self.p['state'] == 'present':
+            # find linked items
+            #   self.b.find_single_link()
+            #   self.b.find_multiple_links()
+            self.r['diff']['after'] = self.b.build_diff(data=self.p)
+
+        # basic validation of conditional parameters
+        if not self.exists and self.p['state'] == 'present':
+            if is_unset(self.p['value']):
+                self.m.fail_json('You need to provide values to create stuff!')
+
+    def _error(self, msg: str) -> None:
+        # for special handling of errors
+        if self.fail:
+            self.m.fail_json(msg)
+
+        else:
+            self.m.warn(msg)
+            raise ModuleSoftError
+
+    # @staticmethod
+    # def _simplify_existing(stuff: dict) -> dict:
+    #     return {
+    #         'enabled': is_true(stuff['enabled']),
+    #         'description': stuff['description'],
+    #         'uuid': stuff['uuid'],
+    #         'param1': stuff['param1'],
+    #         'param2': stuff['param2'],
+    #     }
