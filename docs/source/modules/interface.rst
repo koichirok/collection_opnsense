@@ -11,13 +11,17 @@ Interface
 
 **TESTS**: `vlan <https://github.com/ansibleguy/collection_opnsense/blob/latest/tests/interface_vlan.yml>`_ |
 `vxlan <https://github.com/ansibleguy/collection_opnsense/blob/latest/tests/interface_vxlan.yml>`_ |
-`vip <https://github.com/ansibleguy/collection_opnsense/blob/latest/tests/interface_vip.yml>`_
+`vip <https://github.com/ansibleguy/collection_opnsense/blob/latest/tests/interface_vip.yml>`_ |
+`lagg <https://github.com/ansibleguy/collection_opnsense/blob/latest/tests/interface_lagg.yml>`_ |
+`loopback <https://github.com/ansibleguy/collection_opnsense/blob/latest/tests/interface_loopback.yml>`_
 
 **API Docs**: `Core - Interfaces <https://docs.opnsense.org/development/api/core/interfaces.html>`_
 
 **Service Docs**: `VLAN Docs <https://docs.opnsense.org/manual/other-interfaces.html?highlight=vlan#vlan>`_ |
 `VxLAN Docs <https://docs.opnsense.org/manual/other-interfaces.html?highlight=vlan#vxlan>`_ |
-`VIP Docs <https://docs.opnsense.org/manual/firewall_vip.html>`_
+`VIP Docs <https://docs.opnsense.org/manual/firewall_vip.html>`_ |
+`LAGG Docs <https://docs.opnsense.org/manual/other-interfaces.html?highlight=lagg#lagg>`_ |
+`Loopback Docs <https://docs.opnsense.org/manual/other-interfaces.html?highlight=loopback#loopback>`_
 
 
 Info
@@ -38,11 +42,15 @@ ansibleguy.opnsense.interface_vip
 
 This module manages VIP configuration that can be found in the WEB-UI menu: 'Interfaces - Virtual IPs - Settings'
 
-
 ansibleguy.opnsense.interface_lagg
 ===================================
 
 This module manages LAGG configuration that can be found in the WEB-UI menu: 'Interfaces - Other Types - LAGG'
+
+ansibleguy.opnsense.interface_loopback
+===================================
+
+This module manages Loopback configuration that can be found in the WEB-UI menu: 'Interfaces - Other Types - Loopback'
 
 
 Definition
@@ -102,7 +110,7 @@ ansibleguy.opnsense.interface_vip
 
 
 ansibleguy.opnsense.interface_lagg
-=================================
+==================================
 
 .. warning::
 
@@ -123,6 +131,16 @@ ansibleguy.opnsense.interface_lagg
     "lacp_strict", "string", "false", "\-", "\-", "Enable lacp strict compliance on the interface. The default depends on the system tunable in net.link.lagg.lacp.default_strict_mode. One of: 'default', 'yes', 'no'"
     "mtu", "integer", "false", "false", "\-", "If you leave this field blank, the smallest mtu of this laggs children will be used."
     "description","string","true","\-","desc, name","The description used to match the configured entries to the existing ones"
+    "reload","boolean","false","true","\-", .. include:: ../_include/param_reload.rst
+
+ansibleguy.opnsense.interface_loopback
+======================================
+
+..  csv-table:: Definition
+    :header: "Parameter", "Type", "Required", "Default", "Aliases", "Comment"
+    :widths: 15 10 10 10 10 45
+
+    "description","string","true","\-","desc, name","The unique description used to match the configured entries to the existing ones"
     "reload","boolean","false","true","\-", .. include:: ../_include/param_reload.rst
 
 
@@ -280,7 +298,7 @@ ansibleguy.opnsense.interface_vip
             state: 'absent'
 
 ansibleguy.opnsense.interface_lagg
-=================================
+==================================
 
 .. code-block:: yaml
 
@@ -327,7 +345,48 @@ ansibleguy.opnsense.interface_lagg
             var: existing_entries.data
     
         - name: Removing LAGG
-          ansibleguy.opnsense.interface_vip:
+          ansibleguy.opnsense.interface_lagg:
             device: lagg0
             match_fields: ['device']
+            state: 'absent'
+
+ansibleguy.opnsense.interface_loopback
+======================================
+
+.. code-block:: yaml
+
+    - hosts: localhost
+      gather_facts: no
+      module_defaults:
+        group/ansibleguy.opnsense.all:
+          firewall: 'opnsense.template.ansibleguy.net'
+          api_credential_file: '/home/guy/.secret/opn.key'
+    
+        ansibleguy.opnsense.list:
+          target: 'interface_loopback'
+    
+      tasks:
+        - name: Example
+          ansibleguy.opnsense.interface_loopback:
+            description: 'MyLoopback'
+            # debug: false
+            # state: 'present'
+            # reload: true
+    
+        - name: Adding Loopback
+          ansibleguy.opnsense.interface_loopback:
+            description: 'MyLoopback'
+    
+        - name: Listing
+          ansibleguy.opnsense.list:
+          #  target: 'interface_loopback'
+          register: existing_entries
+    
+        - name: Printing Loopbacks
+          ansible.builtin.debug:
+            var: existing_entries.data
+    
+        - name: Removing Loopback
+          ansibleguy.opnsense.interface_loopback:
+            description: 'MyLoopback'
             state: 'absent'

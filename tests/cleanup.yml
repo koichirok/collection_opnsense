@@ -249,11 +249,8 @@
 
     - name: Cleanup lagg interfaces
       ansibleguy.opnsense.interface_lagg:
-        members:
-          - "{{ if_lag }}"
+        device: 'lagg0'
         state: 'absent'
-      vars:
-        if_lag: "{{ lookup('ansible.builtin.env', 'TEST_FIREWALL_LAGG_IF') | default('vtnet2', true) }}"
 
     - name: Cleanup source-nat
       ansibleguy.opnsense.source_nat:

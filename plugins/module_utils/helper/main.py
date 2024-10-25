@@ -506,6 +506,6 @@ def unset_check_error(params: dict, field: str, fail: bool) -> bool:
     return True
 
 def sanitize_module_args(args: dict) -> dict:
-    args.pop('api_key')
-    args.pop('api_secret')
+    args.pop('api_key', None)
+    args.pop('api_secret', None)
     return args

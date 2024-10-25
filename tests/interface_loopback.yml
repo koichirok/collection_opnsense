@@ -1,6 +1,6 @@
 ---
 
-- name: Testing LAGG interfaces
+- name: Testing Loopback
   hosts: localhost
   gather_facts: no
   module_defaults:
@@ -10,11 +10,7 @@
       ssl_verify: false
 
     ansibleguy.opnsense.list:
-      target: 'interface_lagg'
-
-  vars:
-    if_lag: "{{ lookup('ansible.builtin.env', 'TEST_FIREWALL_LAGG_IF') | default('vtnet2', true) }}"
-    if_lag_ctn: "{{ lookup('ansible.builtin.env', 'TEST_FIREWALL_LAGG_CNT') | default('1', true) }}"
+      target: 'interface_loopback'
 
   tasks:
     - name: Listing
@@ -25,60 +21,64 @@
         opn_pre1.data | length != 0
 
     - name: Removing - does not exist
-      ansibleguy.opnsense.interface_lagg:
-        device: 'lagg99'
+      ansibleguy.opnsense.interface_loopback:
+        description: 'DOESNOTEXIST'
         state: 'absent'
       register: opn_pre2
       failed_when: >
         opn_pre2.failed or
         opn_pre2.changed
 
-    - name: Adding 1 - failing because of invalid interface (server-side)
-      ansibleguy.opnsense.interface_lagg:
-        device: 'lagg0'
-        members:
-          - 'DOES-NOT-EXIST'
-      register: opn_fail1
-      failed_when: not opn_fail1.failed
-      when: not ansible_check_mode
-
     - name: Adding 1
-      ansibleguy.opnsense.interface_lagg:
-        device: 'lagg0'
+      ansibleguy.opnsense.interface_loopback:
         description: 'ANSIBLE_TEST_1_1'
-        members:
-          - '{{ if_lag }}'
-        lagghash: l2
       register: opn1
       failed_when: >
         opn1.failed or
         not opn1.changed
 
-    - name: Adding 1 - nothing changed
-      ansibleguy.opnsense.interface_lagg:
-        device: 'lagg0'
-        description: 'ANSIBLE_TEST_1_1'
-        members:
-          - '{{ if_lag }}'
-        lagghash: l2
+    - name: Adding 2
+      ansibleguy.opnsense.interface_loopback:
+        description: 'ANSIBLE_TEST_1_2'
       register: opn2
       failed_when: >
         opn2.failed or
-        opn2.changed
+        not opn2.changed
+
+    - name: Adding 2 - nothing changed
+      ansibleguy.opnsense.interface_loopback:
+        description: 'ANSIBLE_TEST_1_2'
+      register: opn3
+      failed_when: >
+        opn3.failed or
+        opn3.changed
+      when: not ansible_check_mode
+
+    - name: Removing 2
+      ansibleguy.opnsense.interface_loopback:
+        description: 'ANSIBLE_TEST_1_2'
+        state: 'absent'
+      register: opn4
+      failed_when: >
+        opn4.failed or
+        not opn4.changed
       when: not ansible_check_mode
 
     - name: Listing
       ansibleguy.opnsense.list:
-      register: opn3
+      register: opn5
       failed_when: >
-        'data' not in opn3 or
-        opn3.data | length != 1
+        'data' not in opn5 or
+        opn5.data | length != 1
       when: not ansible_check_mode
 
     - name: Cleanup
-      ansibleguy.opnsense.interface_lagg:
-        device: 'lagg0'
+      ansibleguy.opnsense.interface_loopback:
+        description: "{{ item }}"
         state: 'absent'
+      loop:
+        - 'ANSIBLE_TEST_1_1'
+        - 'ANSIBLE_TEST_1_2'
       when: not ansible_check_mode
 
     - name: Listing

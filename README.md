@@ -38,15 +38,27 @@ ansible-galaxy collection install ansibleguy.opnsense
 
 See: [Docs](https://opnsense.ansibleguy.net)
 
-You want a simple Ansible GUI? Check-out my [Ansible WebUI](https://github.com/ansibleguy/webui)
-
 ----
 
-## Sponsor
+## Advertisement
 
-It was a lot of work (100+ hours) to get those modules working.
+* Need **professional support** using Ansible or OPNSense? Contact us:
 
-If you are happy with the functionality they provide: please [consider donating a few bucks](https://ko-fi.com/ansible0guy)
+  E-Mail: [contact@oxl.at](mailto:contact@oxl.at)
+
+  Tel: [+43 720 302 5732](tel:+437203025732)
+
+  Web: [EN](https://www.o-x-l.com) | [DE](https://www.oxl.at)
+
+  Language: German or English
+
+* You want a simple **Ansible GUI**?
+
+  Check-out this [Ansible WebUI](https://github.com/ansibleguy/webui)
+
+* It was a lot of work (100+ hours) to get those modules working.
+
+  If you are happy with the functionality they provide: please [consider donating a few bucks](https://ko-fi.com/ansible0guy)
 
 ----
 
