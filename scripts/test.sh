@@ -72,6 +72,7 @@ run_test 'unbound_forward' 1
 run_test 'unbound_host' 1
 run_test 'unbound_domain' 1
 run_test 'unbound_host_alias' 1
+run_test 'unbound_dnsbl' 1
 run_test 'syslog' 1
 run_test 'shaper_pipe' 1
 run_test 'shaper_queue' 1

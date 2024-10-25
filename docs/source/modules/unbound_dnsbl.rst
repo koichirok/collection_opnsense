@@ -2,9 +2,9 @@
 
 .. include:: ../_include/head.rst
 
-============
-MODULE TITLE
-============
+======================
+Unbound DNS-Blocklists
+======================
 
 **STATE**: unstable
 
@@ -14,6 +14,10 @@ MODULE TITLE
 
 **Service Docs**: `Unbound DNS  - Blocklists <https://docs.opnsense.org/manual/unbound.html#blocklists>`_
 
+Contribution
+************
+
+Thanks to `@jiuka <https://github.com/jiuka>`_ for developing this module!
 
 Definition
 **********

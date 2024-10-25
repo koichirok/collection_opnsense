@@ -53,6 +53,11 @@ ansibleguy.opnsense.interface_loopback
 This module manages Loopback configuration that can be found in the WEB-UI menu: 'Interfaces - Other Types - Loopback'
 
 
+Contribution
+************
+
+Thanks to `@jiuka <https://github.com/jiuka>`_ for developing the :code:`interface_loopback` module!
+
 Definition
 **********
 

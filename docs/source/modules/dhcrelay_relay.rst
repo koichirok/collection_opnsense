@@ -2,11 +2,11 @@
 
 .. include:: ../_include/head.rst
 
-=============================
+================
 DHCRelay - Relay
-=============================
+================
 
-**STATE**: stable
+**STATE**: unstable
 
 **TESTS**: `Playbook <https://github.com/ansibleguy/collection_opnsense/blob/latest/tests/dhcrelay_destination.yml>`_
 
@@ -14,6 +14,10 @@ DHCRelay - Relay
 
 **Service Docs**: `DHCRelay <https://docs.opnsense.org/manual/dhcp.html#dhcrelay>`_
 
+Contribution
+************
+
+Thanks to `@jiuka <https://github.com/jiuka>`_ for developing this module!
 
 Definition
 **********
