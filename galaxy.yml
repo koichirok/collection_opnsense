@@ -2,7 +2,7 @@
 
 namespace: 'ansibleguy'
 name: 'opnsense'
-version: 1.2.10
+version: 1.2.11
 readme: 'README.md'
 authors:
   - 'AnsibleGuy <guy@ansibleguy.net>'
@@ -19,6 +19,6 @@ tags:
 dependencies: {}
 repository: 'https://github.com/ansibleguy/collection_opnsense'
 documentation: 'https://opnsense.ansibleguy.net'
-homepage: 'https://ansibleguy.net'
+homepage: 'https://www.o-x-l.com'
 issues: 'https://github.com/ansibleguy/collection_opnsense/issues'
 build_ignore: []
