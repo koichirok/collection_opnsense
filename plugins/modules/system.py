@@ -60,7 +60,7 @@ def run_module():
     if not module.check_mode:
         with Session(module=module) as s:
             upgrade_status = get_upgrade_status(s)
-            if upgrade_status['status'] != 'done':
+            if upgrade_status['status'] not in ['done', 'error']:
                 module.fail_json(
                     f'System may be upgrading! System-actions are currently blocked! Details: {upgrade_status}'
                 )
