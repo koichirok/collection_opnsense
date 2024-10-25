@@ -36,7 +36,7 @@ TARGETS = [
     'ipsec_child', 'ipsec_vti', 'ipsec_auth_local', 'ipsec_auth_remote', 'frr_general', 'unbound_general',
     'unbound_acl', 'ids_general', 'ids_policy', 'ids_rule', 'ids_ruleset', 'ids_user_rule', 'ids_policy_rule',
     'openvpn_instance', 'openvpn_static_key', 'openvpn_client_override', 'dhcrelay_destination', 'dhcrelay_relay',
-    'interface_lagg',
+    'interface_lagg', 'interface_loopback',
 ]
 
 
@@ -178,6 +178,10 @@ def run_module():
         elif target == 'interface_lagg':
             from ansible_collections.ansibleguy.opnsense.plugins.module_utils.main.interface_lagg import \
                 Lagg as Target_Obj
+
+        elif target == 'interface_loopback':
+            from ansible_collections.ansibleguy.opnsense.plugins.module_utils.main.interface_loopback import \
+                Loopback as Target_Obj
 
         elif target == 'source_nat':
             from ansible_collections.ansibleguy.opnsense.plugins.module_utils.main.source_nat import \
