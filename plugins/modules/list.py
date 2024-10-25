@@ -36,7 +36,7 @@ TARGETS = [
     'ipsec_child', 'ipsec_vti', 'ipsec_auth_local', 'ipsec_auth_remote', 'frr_general', 'unbound_general',
     'unbound_acl', 'ids_general', 'ids_policy', 'ids_rule', 'ids_ruleset', 'ids_user_rule', 'ids_policy_rule',
     'openvpn_instance', 'openvpn_static_key', 'openvpn_client_override', 'dhcrelay_destination', 'dhcrelay_relay',
-    'interface_lagg', 'interface_loopback',
+    'interface_lagg', 'interface_loopback', 'unbound_dnsbl',
 ]
 
 
@@ -118,6 +118,10 @@ def run_module():
         elif target == 'unbound_forward':
             from ansible_collections.ansibleguy.opnsense.plugins.module_utils.main.unbound_forward \
                 import Forward as Target_Obj
+
+        elif target == 'unbound_dnsbl':
+            from ansible_collections.ansibleguy.opnsense.plugins.module_utils.main.unbound_dnsbl import \
+                DnsBL as Target_Obj
 
         elif target == 'syslog':
             from ansible_collections.ansibleguy.opnsense.plugins.module_utils.main.syslog import \

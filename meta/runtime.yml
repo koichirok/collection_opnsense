@@ -20,6 +20,7 @@ action_groups:
     - ansibleguy.opnsense.unbound_host
     - ansibleguy.opnsense.unbound_domain
     - ansibleguy.opnsense.unbound_host_alias
+    - ansibleguy.opnsense.unbound_dnsbl
   ipsec:
     - ansibleguy.opnsense.ipsec_auth_local
     - ansibleguy.opnsense.ipsec_auth_remote
