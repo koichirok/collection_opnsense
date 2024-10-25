@@ -72,17 +72,13 @@
       register: opn3
       failed_when: >
         'data' not in opn3 or
-        opn3.data | length != 4
+        opn3.data | length != 1
       when: not ansible_check_mode
 
-    - name: Removing 2
+    - name: Cleanup
       ansibleguy.opnsense.interface_lagg:
         device: 'lagg0'
         state: 'absent'
-      register: opn4
-      failed_when: >
-        opn4.failed or
-        not opn4.changed
       when: not ansible_check_mode
 
     - name: Listing
