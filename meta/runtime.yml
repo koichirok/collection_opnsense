@@ -125,6 +125,8 @@ action_groups:
   dhcrelay:
     - ansibleguy.opnsense.dhcrelay_destination
     - ansibleguy.opnsense.dhcrelay_relay
+  dhcp:
+    - ansibleguy.opnsense.dhcp_reservation
   all:
     - metadata:
         extend_group:
@@ -147,6 +149,7 @@ action_groups:
           - ansibleguy.opnsense.ids
           - ansibleguy.opnsense.openvpn
           - ansibleguy.opnsense.dhcrelay
+          - ansibleguy.opnsense.dhcp
 
 plugin_routing:
   modules:

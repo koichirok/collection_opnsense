@@ -36,7 +36,7 @@ TARGETS = [
     'ipsec_child', 'ipsec_vti', 'ipsec_auth_local', 'ipsec_auth_remote', 'frr_general', 'unbound_general',
     'unbound_acl', 'ids_general', 'ids_policy', 'ids_rule', 'ids_ruleset', 'ids_user_rule', 'ids_policy_rule',
     'openvpn_instance', 'openvpn_static_key', 'openvpn_client_override', 'dhcrelay_destination', 'dhcrelay_relay',
-    'interface_lagg', 'interface_loopback', 'unbound_dnsbl',
+    'interface_lagg', 'interface_loopback', 'unbound_dnsbl', 'dhcp_reservation',
 ]
 
 
@@ -398,6 +398,10 @@ def run_module():
         elif target == 'dhcrelay_relay':
             from ansible_collections.ansibleguy.opnsense.plugins.module_utils.main.dhcrelay_relay import \
                 DhcRelayRelay as Target_Obj
+
+        elif target == 'dhcp_reservation':
+            from ansible_collections.ansibleguy.opnsense.plugins.module_utils.main.dhcp_reservation_v4 import \
+                ReservationV4 as Target_Obj
 
     except AttributeError:
         module_dependency_error()

@@ -72,28 +72,30 @@ def is_ip6(host: str, ignore_empty: bool = False, strip_enclosure: bool = True) 
         return False
 
 
+def is_network(entry: str, strict: bool = False) -> bool:
+    try:
+        ip_network(entry, strict=strict)
+        return True
+
+    except ValueError:
+        return False
+
+
 def is_ip_or_network(entry: str, strict: bool = False) -> bool:
     valid = is_ip(entry)
 
-    if not valid:
-        try:
-            ip_network(entry, strict=strict)
-            valid = True
+    if valid:
+        return valid
 
-        except ValueError:
-            valid = False
-
-    return valid
+    return is_network(entry=entry, strict=strict)
 
 
 def is_ip6_network(entry: str, strict: bool = False) -> bool:
     try:
-        valid = isinstance(ip_network(entry, strict=strict), IPv6Network)
+        return isinstance(ip_network(entry, strict=strict), IPv6Network)
 
     except ValueError:
-        valid = False
-
-    return valid
+        return False
 
 
 def valid_hostname(name: str) -> bool:

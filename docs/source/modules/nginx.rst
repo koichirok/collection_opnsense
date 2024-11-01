@@ -37,7 +37,7 @@ Definition
 .. include:: ../_include/param_basic.rst
 
 ansibleguy.opnsense.nginx_general
-=========================================
+=================================
 
 ..  csv-table:: Definition
     :header: "Parameter", "Type", "Required", "Default", "Aliases", "Comment"
