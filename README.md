@@ -185,10 +185,11 @@ not implemented => development => [testing](https://github.com/ansibleguy/collec
 | **OpenVPN**               | ansibleguy.opnsense.openvpn_static_key                                 | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/openvpn.html)                                                       | stable   |
 | **OpenVPN**               | ansibleguy.opnsense.openvpn_status                                     | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/openvpn.html)                                                       | stable   |
 | **OpenVPN**               | ansibleguy.opnsense.openvpn_client_override                            | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/openvpn.html)                                                       | stable   |
-| **Nginx**                 | ansibleguy.opnsense.nginx_general                                      | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/nginx.html#ansibleguy-opnsense-nginx-general)                                                       | unstable |
-| **Nginx**                 | ansibleguy.opnsense.nginx_upstream_server                              | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/nginx.html#ansibleguy-opnsense-nginx-upstream-server)                                                       | unstable |
-| **DHCP Relay**            | ansibleguy.opnsense.dhcrelay                                           | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/dhcrelay_relay.html)                                                       | unstable |
-| **DHCP Relay**                 | ansibleguy.opnsense.dhcrelay_destination                              | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/dhcrelay_destination.html)                                                       | unstable |
+| **Nginx**                 | ansibleguy.opnsense.nginx_general                                      | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/nginx.html#ansibleguy-opnsense-nginx-general)                       | unstable |
+| **Nginx**                 | ansibleguy.opnsense.nginx_upstream_server                              | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/nginx.html#ansibleguy-opnsense-nginx-upstream-server)               | unstable |
+| **DHCP Relay**            | ansibleguy.opnsense.dhcrelay                                           | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/dhcrelay_relay.html)                                                | unstable |
+| **DHCP Relay**            | ansibleguy.opnsense.dhcrelay_destination                               | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/dhcrelay_destination.html)                                          | unstable |
+| **DHCP Reservation**      | ansibleguy.opnsense.dhcp_reservation                                   | [Docs](https://opnsense.ansibleguy.net/en/latest/modules/dhcp.html)                                                          | unstable |
 
 
 ### Roadmap
