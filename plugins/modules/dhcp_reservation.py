@@ -4,7 +4,7 @@
 # Copyright: (C) 2024, AnsibleGuy <guy@ansibleguy.net>
 # GNU General Public License v3.0+ (see https://www.gnu.org/licenses/gpl-3.0.txt)
 
-# see: https://docs.opnsense.org/development/api/plugins/wireguard.html
+# see: https://docs.opnsense.org/development/api/core/kea.html
 
 from ansible.module_utils.basic import AnsibleModule
 
@@ -21,8 +21,8 @@ except MODULE_EXCEPTIONS:
     module_dependency_error()
 
 
-# DOCUMENTATION = 'https://opnsense.ansibleguy.net/en/latest/modules/wireguard.html'
-# EXAMPLES = 'https://opnsense.ansibleguy.net/en/latest/modules/wireguard.html'
+# DOCUMENTATION = 'https://opnsense.ansibleguy.net/en/latest/modules/dhcp.html'
+# EXAMPLES = 'https://opnsense.ansibleguy.net/en/latest/modules/dhcp.html'
 
 
 def run_module():
