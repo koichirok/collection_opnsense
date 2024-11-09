@@ -10,6 +10,8 @@
 2 - Basic
 =========
 
+If you DO NOT want to use Ansible - `this fork <https://github.com/O-X-L/opnsense-api-client>`_ provides you with a raw Python3 interface.
+
 Prerequisites
 *************
 

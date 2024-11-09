@@ -12,6 +12,8 @@ Ansible
 
 See `the documentation <https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#pip-install>`_ on how to install Ansible.
 
+If you DO NOT want to use Ansible - `this fork <https://github.com/O-X-L/opnsense-api-client>`_ provides you with a raw Python3 interface.
+
 Dependencies
 ************
 

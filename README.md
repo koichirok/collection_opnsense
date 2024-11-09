@@ -38,6 +38,8 @@ ansible-galaxy collection install ansibleguy.opnsense
 
 See: [Docs](https://opnsense.ansibleguy.net)
 
+If you DO NOT want to use Ansible - [this fork](https://github.com/O-X-L/opnsense-api-client) provides you with a raw Python3 interface.
+
 ----
 
 ## Advertisement
